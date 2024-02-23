@@ -1,0 +1,77 @@
+{% extends 'adminpanel/layout/base.html' %}
+{% load static %}
+{% block link %}
+<link href="{% static 'adminpanel/css/styles.css' %}" rel="stylesheet" />
+        
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+
+         <!-- Title Page-->
+    <title>Au Register Forms by Colorlib</title>
+
+    <!-- Icons font CSS-->
+    <link href="{% static 'adminpanel/vendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'adminpanel/vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="{% static 'adminpanel/vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'adminpanel/vendor/datepicker/daterangepicker.css' %}" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="{% static 'adminpanel/css/form.css' %}" rel="stylesheet" media="all">
+
+{% endblock link %}
+
+
+{% block body_block %}
+
+
+            <div id="layoutSidenav_content">
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="sb-nav-fixed">
+                        <div class="row justify-content">
+                            <div class="col-lg-7">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                    <div class="card-header"style="background:primary"><h3 class="text-center font-weight-light my-4">Add Campaign</h3></div>
+                                    <div class="card-body">
+                                        <div class="page-wrapper font-robo">
+                                            <div class="wrapper wrapper--w680">
+                                                <div class="card card-1">
+                                                    <div class="card-heading"></div>
+                                                    <div class="card-body">
+                                                        <h2 class="title">Registration Info</h2>
+                                                        {% if error %}
+                                                        <div class="alert alert-danger" role="alert">
+                                                        {{ error }}
+                                                        {% endif %}
+                                                        {% if msg %}
+                                                        <div class="alert alert-success" role="alert">
+                                                        {{ msg }}
+                                                        {% endif %}
+
+                                                        <form method="post" enctype="multipart/form-data" action="{% url 'campaign_save' %}">
+                                                            {% csrf_token %}
+                                                            {% for fields in form %}
+                                                            {{fields}}
+                                                           
+                                                            {% endfor %}
+                                                          
+                                                          
+                                                            <div class="p-t-20">
+                                                                <button class="btn btn--radius btn--green" type="submit">Submit</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+{% endblock  %}

@@ -1,0 +1,78 @@
+{% extends 'users/layout/base.html' %}
+{% load static %}
+{% block body %}
+
+
+
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="card">
+        <div class="row no-gutters">
+            <aside class="col-md-6">
+    <article class="gallery-wrap"> 
+        <div class="img-big-wrap">
+           <a href="#"><img src="{{data.image.url}}" style="length:500x;width:500px"></a>
+        </div> <!-- img-big-wrap.// -->
+        
+    </article> <!-- gallery-wrap .end// -->
+            </aside>
+            <main class="col-md-6 border-left">
+    <article class="content-body">
+    
+    <h2 class="title">{{data.name}}</h2>
+    
+    <div class="mb-3"> 
+        <var class="price h4">${{data.amount}}</var> 
+    </div> 
+    
+    <p>{{data.description}}</p>
+    
+    
+    <hr>
+        <div class="row">
+            {% if zero_error %}
+            <h5 style="color:red;font-size: 30px;" >{{zero_error}}</h5>
+            {% endif %}
+            {% if no_money_error %}
+            <h5 style="color:red;font-size: 30px;" >{{no_money_error}}</h5>
+            {% endif %}
+            {% if money_limit_error %}
+            <h5 style="color:red;font-size: 30px;" >{{money_limit_error}}</h5>
+            {% endif %}
+            {% if success %}
+            <h5 style="color: green;font-size: 30px;">{{success}}</h5>
+            {% endif %}
+            <div class="item-option-select">
+                <h6>Donate</h6>
+                    <form action="{% url "charity_cmplt" data.id %}" method="post">
+                        {% csrf_token %}
+                        <label class="btn btn-light">
+                            <input type="number" class="form-control" id="" name="amount" placeholder="Add amount">
+                          </label>
+                          <button type="submit" class="btn  btn-primary"> Donate Now </button>
+                         
+
+                    </form>
+                  
+                </div> 
+            </div>
+        </div> <!-- row.// -->
+        <div class="row">
+            
+        </div> <!-- row.// -->
+        <hr>
+        
+    </article> <!-- product-info-aside .// -->
+            </main> <!-- col.// -->
+        </div> <!-- row.// -->
+    </div> <!-- card.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+   
+    
+    
+    </div> <!-- container .//  -->
+    </section>
+
+{% endblock %}
