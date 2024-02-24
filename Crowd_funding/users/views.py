@@ -347,22 +347,17 @@ def Add_amount(request):
         user_name = request.user.username
         wallet = Wallet.objects.filter(user_id=user).first()
         amount = wallet.amount
-        charities = addCharity.objects.all().filter(end_date__gte=date_limit, amount__gt=0)
-        campaigns = addCampaign.objects.all().filter(end_date__gte=date_limit, amount__gt=0)
-        set_amount_campaign = SetAmountCampaign.objects.all().filter(name=user)
-        set_amount_charity = SetAmountCharity.objects.all().filter(name=user)
-
+        
+        charities = addCharity.objects.all().filter(end_date__gte=date.today(), amount__gt=0)
+        campaigns = addCampaign.objects.all().filter(end_date__gte=date.today(), amount__gt=0)
         set_amount_campaign_list = SetAmountCampaign.objects.filter(name_id=user).all()
-        set_campaign_list = []
-        set_campaign_list.clear()
-        for data in set_amount_campaign_list:
-            set_campaign_list.append(data.campaign_name_id)
+        set_campaign_list = [data.campaign_name_id for data in set_amount_campaign_list]
 
         set_amount_charity_list = SetAmountCharity.objects.filter(name_id=user).all()
-        set_charity_list = []
-        set_charity_list.clear()
-        for data in set_amount_charity_list:
-            set_charity_list.append(data.charity_name_id)
+        set_charity_list = [data.charity_name_id for data in set_amount_charity_list]
+
+        set_amount_campaign = SetAmountCampaign.objects.all().filter(name_id=user)
+        set_amount_charity = SetAmountCharity.objects.all().filter(name_id=user)
 
         context = {
             'user': user_name,
@@ -531,21 +526,17 @@ def set_Charity(request,charity_id):
           user_name = request.user.username
           charity = addCharity.objects.all().filter(id=charity_id).first()
           wallet = Wallet.objects.filter(user_id = user).first()
-          charities = addCharity.objects.all().filter(end_date__gte = date_limit,amount__gt = 0)
-          campaigns = addCampaign.objects.all().filter(end_date__gte = date_limit,amount__gt = 0)
-          set_amount_campaign = SetAmountCampaign.objects.all().filter(name=user)
-          set_amount_charity = SetAmountCharity.objects.all().filter(name=user)
-          set_amount_campaign_list = SetAmountCampaign.objects.filter(name_id =user).all()
-          set_campaign_list = []
-          set_campaign_list.clear()
-          for data in set_amount_campaign_list:
-               set_campaign_list.append(data.campaign_name_id)
-           
-          set_amount_charity_list = SetAmountCharity.objects.filter(name_id = user).all()
-          set_charity_list = []
-          set_charity_list.clear()
-          for data in set_amount_charity_list:
-               set_charity_list.append(data.charity_name_id)
+          charities = addCharity.objects.all().filter(end_date__gte=date.today(), amount__gt=0)
+          campaigns = addCampaign.objects.all().filter(end_date__gte=date.today(), amount__gt=0)
+          set_amount_campaign_list = SetAmountCampaign.objects.filter(name_id=user).all()
+          set_campaign_list = [data.campaign_name_id for data in set_amount_campaign_list]
+  
+          set_amount_charity_list = SetAmountCharity.objects.filter(name_id=user).all()
+          set_charity_list = [data.charity_name_id for data in set_amount_charity_list]
+  
+          set_amount_campaign = SetAmountCampaign.objects.all().filter(name_id=user)
+          set_amount_charity = SetAmountCharity.objects.all().filter(name_id=user)
+
           context = {
              'user':user_name,
              'amount':wallet.amount,
@@ -613,21 +604,16 @@ def set_Campaign(request,campaign_id):
           user_name = request.user.username
           
           wallet = Wallet.objects.filter(user_id = user).first()
-          charities = addCharity.objects.all().filter(end_date__gte = date_limit,amount__gt = 0)
-          campaigns = addCampaign.objects.all().filter(end_date__gte = date_limit,amount__gt = 0)
-          set_amount_campaign = SetAmountCampaign.objects.all().filter(name=user)
-          set_amount_charity = SetAmountCharity.objects.all().filter(name=user)
+          charities = addCharity.objects.all().filter(end_date__gte=date.today(), amount__gt=0)
+          campaigns = addCampaign.objects.all().filter(end_date__gte=date.today(), amount__gt=0)
           set_amount_campaign_list = SetAmountCampaign.objects.filter(name_id=user).all()
-          set_campaign_list = []
-          set_campaign_list.clear()
-          for data in set_amount_campaign_list:
-               set_campaign_list.append(data.campaign_name_id)
-          
+          set_campaign_list = [data.campaign_name_id for data in set_amount_campaign_list]
+  
           set_amount_charity_list = SetAmountCharity.objects.filter(name_id=user).all()
-          set_charity_list = []
-          set_charity_list.clear()
-          for data in set_amount_charity_list:
-               set_charity_list.append(data.charity_name_id)
+          set_charity_list = [data.charity_name_id for data in set_amount_charity_list]
+  
+          set_amount_campaign = SetAmountCampaign.objects.all().filter(name_id=user)
+          set_amount_charity = SetAmountCharity.objects.all().filter(name_id=user)
           
           
           context = {
