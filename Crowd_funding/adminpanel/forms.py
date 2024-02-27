@@ -29,7 +29,18 @@ class AddCharity(forms.ModelForm):
             'end_date': forms.DateInput(attrs={'type': 'date', 'placeholder': 'End date', 'class': 'form-control'}),
             'image': forms.FileInput(attrs={'accept': '.jpg, .png, .gif,.jpeg'}),
             'description': forms.Textarea(attrs={'class':'md-textarea form-control','placeholder':'Description'}),
-            #'image': forms.ImageField()
+            
+        }
+        labels = {
+            'name': 'Charity Name',
+            'founder_name': 'Founder Name',
+            'email': 'Email',
+            'phone': 'Phone Number',
+            'category': 'Category',
+            'amount': 'Total Amount',
+            'end_date': 'End Date',
+            'image': 'Image',
+            'description': 'Description',
         }
 
 
@@ -63,6 +74,17 @@ class AddCampaign(forms.ModelForm):
              'image': forms.FileInput(attrs={'accept': '.jpg, .png, .gif,.jpeg'}),
             'description': forms.Textarea(attrs={'class':'md-textarea form-control','placeholder':'Description'}),
            
+        }
+        labels = {
+            'name': 'Charity Name',
+            'founder_name': 'Founder Name',
+            'email': 'Email',
+            'phone': 'Phone Number',
+            'category': 'Category',
+            'amount': 'Total Amount',
+            'end_date': 'End Date',
+            'image': 'Image',
+            'description': 'Description',
         }
 
 

@@ -47,7 +47,10 @@
                     <form method="post" enctype="multipart/form-data" action="{% url 'charity_save' %}">
                     {% csrf_token %}
                     {% for fields in form %}
-                    {{fields}}
+                    
+                    {{ fields.label_tag }}
+                    {{ fields }}
+                    
                     {% endfor %}
                     <div class="p-t-20">
                         <button class="btn btn--radius btn--green" type="submit">Submit</button>
@@ -96,5 +99,4 @@
     }
     
 </script>
-
 {% endblock  %}

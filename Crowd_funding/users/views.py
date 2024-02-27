@@ -14,15 +14,11 @@ import pyotp
 from datetime import datetime,timedelta,date
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-
-
-
 # Create your views here.
 #current date
 today = datetime.now()
 #date limit for charity listing in auto deduction
 date_limit = today + timedelta(days=60)
-
 
 #============================auto deduction method=====================================
 def autoDeduct():
@@ -247,8 +243,10 @@ def sign_in(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            messages.success(request, 'Successfully signed in.')
-            return redirect('index')  
+            if 'next' in request.POST:
+                 return redirect(request.POST.get('next'))
+            else:  
+                return redirect('index')  
         else:
             messages.error(request, 'Invalid username or password')
     else:
@@ -407,12 +405,17 @@ def Add_amount(request):
  
 
 
-#========================DONATE TO CHARITY PAGE=================================    
+#========================DONATE TO CHARITY PAGE=================================  
+from django.http import HttpResponseRedirect  
 def donate_charity(request,donate_id):
-     
-          data = addCharity.objects.filter(id=donate_id).first()
-          
-          return render(request,'users/donateCharity.html',{'data':data})
+    if request.user.is_authenticated:
+        data = addCharity.objects.filter(id=donate_id).first()
+        return render(request,'users/donateCharity.html',{'data':data})
+    else:
+        return HttpResponseRedirect(redirect('signin').url + f"?next={request.path}")
+        
+            
+
      
 
 #====================CHARITY DONATTION COMPLETION============================
@@ -460,6 +463,8 @@ def charity_cmplt(request,donate_id):
                      return render(request, 'users/donateCharity.html', {'zero_error': zero_error, 'data': data})
      else:
           return redirect('signin')
+
+          
           
      
 
@@ -470,7 +475,7 @@ def donate_campaign(request,donate_id):
           data = addCampaign.objects.filter(id=donate_id).first()
           return render(request,'users/donateCampaign.html',{'data':data})
      else:
-          return redirect("signin")
+        return HttpResponseRedirect(redirect('signin').url + f"?next={request.path}")
 
 #====================CHARITY DONATTION COMPLETION============================    
 def campaign_cmplt(request, donate_id):
