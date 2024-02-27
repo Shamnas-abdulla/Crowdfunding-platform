@@ -409,12 +409,11 @@ def Add_amount(request):
 
 #========================DONATE TO CHARITY PAGE=================================    
 def donate_charity(request,donate_id):
-     if request.user.is_authenticated:
+     
           data = addCharity.objects.filter(id=donate_id).first()
           
           return render(request,'users/donateCharity.html',{'data':data})
-     else:
-          return redirect('signin')
+     
 
 #====================CHARITY DONATTION COMPLETION============================
 def charity_cmplt(request,donate_id):
@@ -459,7 +458,10 @@ def charity_cmplt(request,donate_id):
                else:     
                      zero_error = "Please enter a valid positive amount "
                      return render(request, 'users/donateCharity.html', {'zero_error': zero_error, 'data': data})
-     return render(request, 'user/index.html')
+     else:
+          return redirect('signin')
+          
+     
 
 
 #========================DONATE TO CAMPAIGN PAGE================================= 

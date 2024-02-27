@@ -62,12 +62,14 @@ def password(request):
          
 
 def change_pass(request):
-     id = request.session['id'] 
-     if request.method == 'POST':
+    id = request.session['id'] 
+
+    if request.method == 'POST':
         password = request.POST.get('password')
         admin_Login.objects.filter(id=id).update(password=password)
-        return render(request,'adminpanel/password.html')
-        
+        return redirect('password')
+
+    return render(request, 'your_template.html')
         
 
 #----------------------index page-------------------------------------
@@ -94,7 +96,7 @@ def user(request):
   
 
 
-#-----------------------users view-------------------------------------
+#-----------------------Wallet view-------------------------------------
 
 
 def wallet_management(request):
@@ -103,6 +105,7 @@ def wallet_management(request):
         return render(request,'adminpanel/wallet.html',{'data':data})
     else:
         return render(request,'adminpanel/login.html')
+    
 #----------------------charity category------------------------
 
 
@@ -173,19 +176,24 @@ def charity_save(request):
         email=request.POST.get('email')
         phone=request.POST.get('phone')
       
-        if addCampaign.objects.filter(name=char_name).exists():
-             context = {'form': form,'error': 'Category name already exist'}
+        if addCharity.objects.filter(name=char_name).exists():
+             context = {'form': form,'error': 'Charity name already exist'}
              return render(request, 'adminpanel/charities.html',context)
-        if addCampaign.objects.filter(email=email).exists():
+        if addCharity.objects.filter(email=email).exists():
              context = {'form': form,'error': 'Email already exist'}
              return render(request, 'adminpanel/charities.html',context)
-        if addCampaign.objects.filter(phone=phone).exists():
+        if addCharity.objects.filter(phone=phone).exists():
             context = {'form': form,'error': 'Phone already exist'}
             return render(request, 'adminpanel/charities.html',context)
         if form.is_valid():
-            form.save()     
-            context = {'form': form,'msg': 'Charity is saved'}
-            return render(request, 'adminpanel/charities.html', context)
+                new_charity = form.save()
+                charity_id = new_charity.id
+
+                # Construct the donation link
+                donation_link = f"http://127.0.0.1:8000/donate_charity/{charity_id}/"
+                msg = "Charity is saved"
+
+                return render(request, 'adminpanel/charities.html', {'donation_link': donation_link,'form':form,'msg':msg})
         else:
             context = {'form': form,'error': 'Please enter valid details'}
             return render(request, 'adminpanel/charities.html',context)
@@ -271,8 +279,7 @@ def campaign(request):
         return render(request, 'adminpanel/campaign.html',{'form': form})
     else:
         return render(request,'adminpanel/login.html')
-    form = AddCampaign()
-    return render(request, 'adminpanel/campaign.html',{'form': form})
+    
 
 
 
@@ -293,9 +300,14 @@ def campaign_save(request):
             context = {'form': form,'error': 'Phone already exist'}
             return render(request, 'adminpanel/campaign.html',context)
         if form.is_valid():
-            form.save()     
-            context = {'form': form,'msg': 'Campaign is saved'}
-            return render(request, 'adminpanel/campaign.html', context)
+                new_campaign = form.save()
+                campaign_id = new_campaign.id
+
+                # Construct the donation link
+                donation_link = f"http://127.0.0.1:8000/donate_campaign/{campaign_id}/"
+                msg = "Campaign is saved"
+
+                return render(request, 'adminpanel/charities.html', {'donation_link': donation_link,'form':form,'msg':msg})
         else:
             errors = form.errors
             context = {'form': form,'error': errors}

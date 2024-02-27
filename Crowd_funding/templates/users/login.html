@@ -1,63 +1,51 @@
 {% extends 'users/layout/base.html' %}
 {% load static %}
 {% block body %}
-
-<body>
-    <div class="container" style="margin-top: 200px;width: 450px;">
-     {% for message in messages  %}
-      {% if message %}
-      {% if message.tags == 'success' %}
-      <div class="alert alert-success">
-          <a class="close" href="#" data-dismiss="alert">×</a>
-             {{ message }}
-      </div>
-    
-      {% else %}
-    
-      <div class="alert alert-danger">
-          <a class="close" href="#" data-dismiss="alert">×</a>
-             {{ message }}
-      </div>
-      {% endif %}
-      {% endif %}
-      {% endfor %}
- 
-
-      {% load widget_tweaks %}
-
-<form method="post" action="{% url 'signin' %}">
+<div class="container">
+    <h1 style="margin-top: 50px; margin-left: 450px;font-family: Georgia, serif;">Welcome Back</h1>
+</div>
+<div class="container" style="margin-top: 40px;width: 450px;">
+    {% for message in messages  %}
+    {% if message %}
+    {% if message.tags == 'success' %}
+    <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+        {{ message }}
+    </div>
+    {% else %}
+    <div class="alert alert-danger">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+        {{ message }}
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+    {% load widget_tweaks %}
+    <form method="post" action="{% url 'signin' %}">
     {% csrf_token %}
-
     <!-- Username input -->
     <div class="form-group mb-4">
         {{ form.username.label_tag }}
         {{ form.username|attr:"class:form-control" }}
     </div>
-
     <!-- Password input -->
     <div class="form-group mb-4">
         {{ form.password.label_tag }}
         {{ form.password|attr:"class:form-control" }}
     </div>
-
     <!-- 2 column grid layout for inline styling -->
     <div class="row mb-4">
         <div class="col d-flex justify-content-center">
-            <div class="col">
+            <div class="col" style="font-size: 20px;font-family: Georgia, serif;" >
                 <!-- Simple link -->
-                <center><a href="{% url 'forgot_password' %}" class="text-primary" style="font-size: 17px;">Forgot password?</a></center><br>
-                <center><p style="color:rgb(4, 4, 157);">Don't have an account : <a href="{% url 'user_signup' %}" class="text-primary" style="font-size: 17px;">Signup</a></p><br> </center>               
+                <center><a href="{% url 'forgot_password' %}" class="text-primary">Forgot password?</a></center><br>
+                <center><p>Don't have an account : <a href="{% url 'user_signup' %}" class="text-primary">Signup</a></p><br> </center>               
             </div>
         </div>
     </div>
-
     <!-- Submit button -->
     <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-</form>
-
-    
-    </div>
-    <div><br><br><br><br></div>
-  <!-- Pills content -->
-</body>
+    </form>   
+</div>
+<div><br><br><br><br></div>
 {% endblock %}

@@ -2,91 +2,79 @@
 {% load static %}
 {% block link %}
 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-<link rel="stylesheet"  href="{% static 'adminpanel/css/styles.css' %}" >
-<link rel="stylesheet"  href="{% static 'adminpanel/css/views.css'  %}" >
-<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin= "anonymous"></script>
+<link rel="stylesheet" href="{% static 'adminpanel/css/styles.css' %}" />
+<link rel="stylesheet" href="{% static 'adminpanel/css/views.css'  %}" />
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 {% endblock link %}
 
-
 {% block body_block %}
-
-
-       <div id="layoutSidenav_content">
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="sb-nav-fixed">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-7">
-                                <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"style="background:primary"><h3 class="text-center font-weight-light my-4">Add Campaign Category</h3></div>
-                                    
-                                    {% if error %}
-                                    <div class="alert alert-danger" role="alert">
-                                      {{ error }}
-                                    </div>
-                                    {% endif %}
-                                    {% if msg %}
-                                    <div class="alert alert-danger" role="alert">
-                                      {{ msg }}
-                                    </div>
-                                    {% endif %}
-                                    <div class="card-body">
-                                       
-                                        <form  method="post" action="{% url 'campaign_category_save' %}" >
-                                            {% csrf_token %}
-
-                                    
-                                           
-                                            <div>
-                                                <input type="text" name="name">
-                                                <button type="submit">Add Campaign category</button>
-                                            </div>
-                                           
-                                           
-                                        
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
-                          <div class="card">
-                            <div class="card-body">
-                              <h4 class="card-title">Categories </h4>
-    
-                              <div class="table-responsive">
-                                <table class="table table-hover">
-                                  <thead>
-                                    <tr>
-                                      <th>Category name</th>
-                                      <th>Delete</th>
-                                      
-                                      
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {% for name in lists %}
-                                    <tr>
-                                        <td>{{name.name}}</td>
-                                        <td> <a href="{% url 'delete_campaign_category' name.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a> </td>
-                                        
-                                    </tr>
-                                    {% endfor %}
-                                 
-                                  
-                                    
-                                        
-                                    
-                                                                       
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </main>
+<div id="layoutSidenav_content">
+  <main>
+    <div class="sb-nav-fixed">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-7">
+            <div class="card shadow-lg border-0 rounded-lg">
+              <div class="card-header">
+                <h3 class="text-center font-weight-light my-4 text-white">Add Campaign Category</h3>
+              </div>
+              <div class="card-body">
+                {% if error %}
+                  <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                  </div>
+                {% endif %}
+                {% if msg %}
+                  <div class="alert alert-success" role="alert">
+                    {{ msg }}
+                  </div>
+                {% endif %}
+                <form method="post" action="{% url 'campaign_category_save' %}">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="categoryName" class="form-label">Category Name</label>
+                    <input style="color:white" type="text" class="form-control" id="categoryName" name="name" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Add Campaign Category</button>
+                </form>
+              </div>
             </div>
-           
+          </div>
         </div>
+      </div>
+
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Categories</h4>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Category Name</th>
+                        <th>Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for name in lists %}
+                      <tr>
+                        <td>{{ name.name }}</td>
+                        <td>
+                          <a href="{% url 'delete_campaign_category' name.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
 {% endblock %}
