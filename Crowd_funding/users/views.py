@@ -14,6 +14,7 @@ import pyotp
 from datetime import datetime,timedelta,date
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+
 # Create your views here.
 #current date
 today = datetime.now()
@@ -178,7 +179,7 @@ def generate_email():
 
 # call these two function in 28'th day of every month
 # To inform there is no enough amount in their wallet to auto deduction  
-if datetime.today().day == 28:
+if datetime.today().day == 2:
      total_money_deduct()
      generate_email()
 
@@ -266,14 +267,14 @@ def user_signup(request):
             messages.success(request, 'Successfully signed up.')
             return redirect('signin')
         else:
-            messages.error(request, 'Invalid form submission.')
+            pass
     else:
         form = UserSignupForm()
 
     return render(request, 'users/signup.html', {'form': form})
 
 
-from django.contrib.auth import logout
+
 
 
 #===============================LOGOUT=======================================

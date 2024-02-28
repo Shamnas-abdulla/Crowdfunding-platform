@@ -1,6 +1,6 @@
 from django import forms
-from .models import Campaign_Category, Charity_Category, addCampaign,admin_Login,addCharity
-from django.forms.widgets import NumberInput
+from .models import Campaign_Category, Charity_Category, addCampaign,addCharity
+
 
 
 #----------------------Charity category form--------------------

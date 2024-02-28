@@ -83,9 +83,6 @@ class user_signup(AbstractUser):
     )
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(user_signup, on_delete=models.CASCADE, related_name='profile')
-    bio = models.TextField(blank=True)
     
 
 
