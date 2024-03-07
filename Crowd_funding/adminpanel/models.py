@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 class admin_Login(models.Model):
     user_name = models.CharField(max_length=100,null=False)
     password = models.CharField(max_length=50,null=False)
+    email = models.EmailField(default="shamnasabdulla@gmail.com")
 
 
 
@@ -132,4 +133,7 @@ class OTP(models.Model):
     def __str__(self):
         return str(self.user) 
 
-    
+class AdminOTP(models.Model):
+    user = models.CharField(max_length=255)
+    otp_secret = models.CharField(max_length=32)
+    otp_created_at = models.DateTimeField(auto_now_add=True)

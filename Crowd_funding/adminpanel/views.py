@@ -4,9 +4,14 @@ from django.contrib.auth import logout
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from .forms import AddCampaign, CampaignCategoryForm, CharityCategoryForm,AddCharity
-from .models import Campaign_Category, Charity_Category, addCampaign , admin_Login,addCharity,user_signup,Wallet
+from .models import Campaign_Category, Charity_Category, addCampaign , admin_Login,addCharity,user_signup,Wallet,OTP,AdminOTP
 from datetime import date
 from django.contrib.auth.hashers import make_password,check_password
+import pyotp
+from django.contrib.auth.password_validation import validate_password
+from django.conf import settings
+from django.core.mail import send_mail
+from django.core.exceptions import ValidationError
 
 
 #---------------------Admin login section--------------------------
@@ -18,28 +23,23 @@ def admin_login(request):
 
 def admin_login_check(request):
     if request.method == 'POST':
-        
         user_name = request.POST.get('user_name')
         password = request.POST.get('password')
-
         try:
             user =  admin_Login.objects.filter(user_name=user_name,password=password).get()
             
         except admin_Login.DoesNotExist:
                 user= None
+                messages.error(request, 'invalid username or password')
         if user:
-               
-                   
-                     request.session['name'] = user.user_name
-                     request.session['id'] = user.id
-                     return render(request,'adminpanel/index.html') 
-               
-                     
-       
-            
+             request.session['name'] = user.user_name
+             request.session['id'] = user.id
+             return render(request,'adminpanel/index.html')    
         else:
-               return render(request,'adminpanel/login.html',{'error':'invalid username or password'})
+               
+               return render(request,'adminpanel/login.html')
     else:
+        messages.error(request, 'invalid username or password')
 
         return render(request,'adminpanel/login.html')   
 
@@ -48,8 +48,8 @@ def Logout(request):
      your_data = request.session.get('id', None)
      if your_data is not None:
         del request.session['id']
-     logout(request)
-     return render(request,'adminpanel/login.html')
+        logout(request)
+        return render(request,'adminpanel/login.html')
 
 #-------------------Change password----------------
 
@@ -69,7 +69,7 @@ def change_pass(request):
         admin_Login.objects.filter(id=id).update(password=password)
         return redirect('password')
 
-    return render(request, 'your_template.html')
+    return render(request, 'adminpanel/password.html')
         
 
 #----------------------index page-------------------------------------
@@ -337,3 +337,88 @@ def delete_campaign(request,pk):
     charity = addCharity.objects.get(pk=pk)
     charity.delete()
     return redirect('view_campaign')
+
+
+#==========================FORGOT PASSWORD SECTION==============================
+def ForgotPassword(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user_data = admin_Login.objects.values('id', 'email').get(email=email)
+        except admin_Login.DoesNotExist:
+            messages.error(request, 'User with this email does not exist.')
+            return redirect('ForgotPassword')
+
+        # Generate OTP secret
+        otp_secret = pyotp.random_base32()
+        totp = pyotp.TOTP(otp_secret, digits=6)
+        current_otp = totp.now()
+        
+
+        AdminOTP.objects.create(user=str(user_data['id']), otp_secret=current_otp)
+
+        email_param = user_data.get('email', '')
+        send_otp_email(email_param, current_otp)
+        url = reverse('VerifyOtp', args=[email_param])
+        return redirect(url)
+
+    return render(request, 'adminpanel/registration/ForgotPassword.html')
+
+def VerifyOtp(request, email):  
+    print(f"{email} is received")
+    if request.method == 'POST':
+        otp_entered = request.POST.get('otp', '')
+        user = admin_Login.objects.values('id', 'email').get(email=email)
+        user_id = str(user['id'])
+        
+        otp_instance = AdminOTP.objects.filter(user=user_id).last()
+
+        if otp_instance and otp_entered == otp_instance.otp_secret:
+            # OTP verification successful
+            email_param = user.get('email', '')
+            url = reverse('ResetPassword', args=[email_param])
+            return redirect(url)
+        else:
+            messages.error(request, 'Invalid OTP. Please try again.')
+
+    return render(request, 'adminpanel/registration/VerifyOtp.html')
+
+def ResetPassword(request, email):
+    if request.method == 'POST':
+        try:
+            user = admin_Login.objects.get(email=email)
+        except admin_Login.DoesNotExist:
+            messages.error(request, f"User with email '{email}' does not exist.")
+            return render(request, 'adminpanel/registration/ResetPassword.html')
+        
+
+        new_password = request.POST.get('new_password')
+
+        # Validate the new password
+        try:
+            validate_password(new_password, user)
+        except ValidationError as e:
+            messages.error(request, '\n'.join(e.messages))
+            return render(request, 'adminpanel/registration/ResetPassword.html')
+
+        # Update user's password
+        admin_Login.objects.filter(email=email).update(password=new_password)
+        
+
+        # Clear OTP data
+        AdminOTP.objects.filter(user=user).delete()
+
+        messages.success(request, 'Password reset successfully. You can now log in.')
+        return redirect('admin_login')
+
+    return render(request, 'adminpanel/registration/ResetPassword.html')
+
+
+
+def send_otp_email(email, otp_secret):
+    subject = 'Your OTP for Password Reset'
+    message = f'Your OTP is: {otp_secret}'
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+
+    send_mail(subject, message, from_email, recipient_list)

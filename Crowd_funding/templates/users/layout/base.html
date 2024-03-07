@@ -67,9 +67,22 @@
                         <!--<li class="submenu-item"><a href="">DONATE </a></li>-->
                       </ul>
                     </li>
-                    <li><a href="{% url "create_wallet" %}">WALLET</a></li>
-                    <li><a href="{% url 'signin' %}">SIGNIN</a></li>
-                    <li><a href="{% url 'logout' %}">LOGOUT</a></li> 
+                    <li class="has-child">
+                      <a href="{% url 'create_wallet' %}">WALLET</a>
+                      <ul class="submenu">
+                          <!-- <li class="submenu-item"><a href="">DONATE </a></li> -->
+                      </ul>
+                  </li>
+                  <script>
+                    console.log("User authenticated: {% if user.is_authenticated %}Yes{% else %}No{% endif %}");
+                </script>
+                  {% if user.is_authenticated %}
+                      <li><a href="{% url 'logout_user' %}">LOGOUT</a></li>
+                  {% else %}
+                      <li><a href="{% url 'signin' %}">SIGNIN</a></li>
+                  {% endif %}
+                  
+
             </ul>
                 </div> <!-- /#navbar -->
               </div> <!-- /.container -->

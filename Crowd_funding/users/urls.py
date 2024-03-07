@@ -17,7 +17,7 @@ urlpatterns = [
     path('signin/', views.sign_in, name='signin'),
 
     #=======================logout===================
-    path('logout/', views.logout_view, name='logout'),
+    path('logout_user/', views.logout_view, name='logout_user'),
     
     #================Forgot password section======================
     path('forgot_password/', views.forgot_password, name='forgot_password'),

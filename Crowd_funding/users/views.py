@@ -14,6 +14,8 @@ import pyotp
 from datetime import datetime,timedelta,date
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import AuthenticationForm
+
 
 # Create your views here.
 #current date
@@ -179,12 +181,12 @@ def generate_email():
 
 # call these two function in 28'th day of every month
 # To inform there is no enough amount in their wallet to auto deduction  
-if datetime.today().day == 2:
+if datetime.today().day == 28:
      total_money_deduct()
      generate_email()
 
 # Call these functions in 1'st day of every month for auto deduction
-if datetime.today().day == 1:
+if datetime.today().day == 28:
      total_money_deduct()
      autoDeduct()
      
@@ -237,23 +239,26 @@ def list_Campaign(request):
 
 #==================================SIGN_IN====================================
 
+
+
 @csrf_protect
 def sign_in(request):
     if request.method == 'POST':
-        form = YourLoginForm(request, data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             if 'next' in request.POST:
-                 return redirect(request.POST.get('next'))
-            else:  
-                return redirect('index')  
+                return redirect(request.POST.get('next'))
+            else:
+                return redirect('index')
         else:
             messages.error(request, 'Invalid username or password')
     else:
-        form = YourLoginForm()
+        form = AuthenticationForm()
 
     return render(request, 'users/login.html', {'form': form})
+
 
 
 #==================================SIGN_UP=============================================
@@ -278,7 +283,7 @@ def user_signup(request):
 
 
 #===============================LOGOUT=======================================
-@login_required
+
 def logout_view(request):
     if request.user.is_authenticated:
          logout(request)
@@ -292,6 +297,7 @@ def logout_view(request):
 #===============================WALLET PAGE=================================
 @login_required
 def create_wallet(request):
+    print("create_wallet view called.")
     print("User authenticated:", request.user.is_authenticated)
     if request.user.is_authenticated:
         user_id = request.user.id
@@ -316,7 +322,8 @@ def create_wallet(request):
         set_amount_charity = SetAmountCharity.objects.all().filter(name_id=user_id)
 
         context = {
-            'user': user,
+            'user': request.user,
+            'user_name': user,
             'amount': wallet.amount,
             'charities': charities,
             'campaigns': campaigns,
@@ -359,7 +366,8 @@ def Add_amount(request):
         set_amount_charity = SetAmountCharity.objects.all().filter(name_id=user)
 
         context = {
-            'user': user_name,
+            'user': request.user,
+            'user_name': user_name,
             'amount': amount,
             'set_amount_charity': set_amount_charity,
             'set_amount_campaign': set_amount_campaign,
@@ -546,7 +554,8 @@ def set_Charity(request,charity_id):
           set_amount_charity = SetAmountCharity.objects.all().filter(name_id=user)
 
           context = {
-             'user':user_name,
+             'user': request.user,
+             'user_name': user,
              'amount':wallet.amount,
              'charities':charities,
              'campaigns':campaigns,
@@ -625,7 +634,8 @@ def set_Campaign(request,campaign_id):
           
           
           context = {
-             'user':user_name,
+             'user': request.user,
+             'user_name': user,
              'charities':charities,
              'amount':wallet.amount,
              'campaigns':campaigns,

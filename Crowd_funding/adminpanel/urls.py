@@ -16,6 +16,11 @@ urlpatterns = [
     path('password',views.password,name='password'),
     path('change_pass',views.change_pass,name='change_pass'),
 
+    #================Forgot password section======================
+    path('ForgotPassword/', views.ForgotPassword, name='ForgotPassword'),
+    path('VerifyOtp/<str:email>/', views.VerifyOtp, name='VerifyOtp'),
+    path('ResetPassword/<str:email>/', views.ResetPassword, name='ResetPassword'),
+
     #---------------------home section---------------
 
     path('index/',views.index,name='admin_index'),
