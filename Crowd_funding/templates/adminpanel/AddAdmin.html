@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Admin</title>
+
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">New Admin</h1>
+                        
+                        <div id="error-message" class="alert alert-danger" role="alert" style="display: none;"></div>
+                        <form action="{% url "AddAdmin" %}" method="POST" onsubmit="return validatePassword()">
+                            {% csrf_token %}
+
+                            {% for message in messages %}
+                            {% if message %}
+                            {% if message.tags == 'success' %}
+                                <div class="alert alert-success">
+                                    <a class="close" href="#" data-dismiss="alert">×</a>
+                                    {{ message }}
+                                </div>
+                                {% else %}
+                                <div class="alert alert-danger">
+                                    <a class="close" href="#" data-dismiss="alert">×</a>
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" class="form-control" id="password1" name="password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Confirm Password:</label>
+                                <input type="password" class="form-control" id="password2" name="password" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">Create Admin</button>
+                            <a href="{% url "admin_index" %}"class="btn btn-primary btn-block">Goto Home</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS and Popper.js if needed -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        function validatePassword() {
+            var newPassword = document.getElementById("password1").value;
+            var confirmPassword = document.getElementById("password2").value;
+            var errorMessageElement = document.getElementById("error-message");
+    
+            // Two password fields must be the same
+            if (newPassword !== confirmPassword) {
+                errorMessageElement.textContent = "Enter the same password in both fields";
+                errorMessageElement.style.display = "block";
+                return false;
+            }
+    
+            // Password must be at least 8 characters long
+            if (newPassword.length < 8) {
+                errorMessageElement.textContent = "Password must be at least 8 characters long";
+                errorMessageElement.style.display = "block";
+                return false;
+            }
+    
+            // List of common passwords (you can extend this list)
+            var commonPasswords = ["password", "12345678", "qwertyui", "abcd1234"];
+    
+            // Check if the password is in the list of common passwords
+            if (commonPasswords.includes(newPassword.toLowerCase())) {
+                errorMessageElement.textContent = "This is a common password .Choose a stronger password";
+                errorMessageElement.style.display = "block";
+                return false;
+            }
+    
+            errorMessageElement.style.display = "none"; // Clear and hide the error message
+            return true;
+        }
+    </script>
+    
+
+</body>
+</html>

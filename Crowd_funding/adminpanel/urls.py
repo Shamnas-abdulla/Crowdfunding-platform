@@ -11,9 +11,12 @@ urlpatterns = [
     path('admin_login_check',views.admin_login_check,name='admin_login_check'),
     path('logout/',views.Logout,name='logout'),
 
+    #------------------Add new admin-----------------------
+
+    path('AddAdmin/',views.addAdmin,name="AddAdmin"),
+
     #---------------Change password-------------------
 
-    path('password',views.password,name='password'),
     path('change_pass',views.change_pass,name='change_pass'),
 
     #================Forgot password section======================
@@ -24,6 +27,11 @@ urlpatterns = [
     #---------------------home section---------------
 
     path('index/',views.index,name='admin_index'),
+
+    #---------------------------Admin view-----------------
+    
+    path('adminView/',views.adminView,name='adminView'),
+    path('deleteAdmin/<int:pk>/',views.deleteAdmin,name='deleteAdmin'),
 
     #---------------------------user view-----------------
     

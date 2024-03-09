@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 #--------------------Admin login -------------------------
 class admin_Login(models.Model):
     user_name = models.CharField(max_length=100,null=False)
-    password = models.CharField(max_length=50,null=False)
+    password = models.CharField(max_length=255,null=False)
     email = models.EmailField(default="shamnasabdulla@gmail.com")
 
 

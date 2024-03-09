@@ -14,6 +14,10 @@ from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 
 
+
+    
+
+
 #---------------------Admin login section--------------------------
 
 
@@ -53,26 +57,53 @@ def Logout(request):
 
 #-------------------Change password----------------
 
-def password(request):
-     if request.session.get('id'):
-      
-           return render(request,'adminpanel/password.html')
-     else:
-         return render(request,'adminpanel/login.html')
          
 
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 def change_pass(request):
-    id = request.session['id'] 
+    id = request.session.get('id')  # Use get to avoid KeyError if 'id' is not in the session
 
     if request.method == 'POST':
-        password = request.POST.get('password')
-        admin_Login.objects.filter(id=id).update(password=password)
-        return redirect('password')
+        new_password = request.POST.get('new_password')
+        existing_pass = admin_Login.objects.filter(id=id).values_list('password', flat=True).first()
+        if check_password(new_password , existing_pass):
+            messages.error(request,'This is the old password')
+            return redirect('change_pass')
+        hashed_password = make_password(new_password)
+    
+        # Update the password using the hashed value
+        admin_Login.objects.filter(id=id).update(password=hashed_password)
+        messages.success(request, 'Password changed successfully.')
 
-    return render(request, 'adminpanel/password.html')
+        return redirect('change_pass')
+    else:
+         return render(request, 'adminpanel/password.html')
+
         
+#-----------------------Add new admin-------------------------
+def addAdmin(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Check if username or email already exists
+        if admin_Login.objects.filter(user_name=username).exists():
+            messages.error(request, 'Username already exists. Please choose a different one.')
+        elif admin_Login.objects.filter(email=email).exists():
+            messages.error(request, 'Email already exists. Please choose a different one.')
+        else:
+            # If username and email are unique, create a new admin
+            admin_Login.objects.create(user_name=username, email=email, password=password)
+            messages.success(request, 'New admin added successfully.')
+    else:
+        return render(request, 'adminpanel/AddAdmin.html')
+
+    return render(request, 'adminpanel/AddAdmin.html')
 
 #----------------------index page-------------------------------------
+
 
 
 def index(request):
@@ -84,6 +115,33 @@ def index(request):
       #checking login do this all page    
 
 
+
+#-----------------------Admin view-------------------------------------
+from django.shortcuts import get_object_or_404
+
+def adminView(request):
+    if request.session.get('id'):
+        admin_id = request.session.get('id')
+        logged_admin = get_object_or_404(admin_Login, id=admin_id)
+        logged_admin_user_name = logged_admin.user_name
+        admins = admin_Login.objects.all()
+        context = {
+        'admins': admins,
+        'can_remove': logged_admin_user_name == "shamnas",
+    }
+        return render(request,'adminpanel/Admin.html',context)
+    else:
+        return render(request,'adminpanel/Admin.html')
+    
+def deleteAdmin(request,pk):
+    if request.session.get('id'):
+        admin = admin_Login.objects.get(pk=pk)
+        admin.delete()
+        return redirect('adminView')
+    else:
+        return render(request,'adminpanel/login.html')
+
+  
 #-----------------------users view-------------------------------------
 
 
