@@ -21,7 +21,7 @@ from django.contrib.auth.forms import AuthenticationForm
 #current date
 today = datetime.now()
 #date limit for charity listing in auto deduction
-date_limit = today + timedelta(days=60)
+date_limit = today + timedelta(days=30)
 
 #============================auto deduction method=====================================
 def autoDeduct():
@@ -191,7 +191,18 @@ if datetime.today().day == 28:
      autoDeduct()
      
 
+def dltSet():
+    print("Function called")
+    charities = SetAmountCharity.objects.all()
+    campaigns = SetAmountCampaign.objects.all()
+    for charity in charities:
+        if charity.amount <= 0 or charity.end_date < date.today():
+            charity.delete()
+    for campaign in campaigns:
+         if campaign.amount <= 0 or charity.end_date < date.today():
+              campaign.delete()
 
+dltSet()  
 
 
 #================================index page===========================================
@@ -340,7 +351,17 @@ def create_wallet(request):
 
 
 
+def search_charity(request):
+    q_charity = request.GET.get('q_charity', '')
+    charity_results = addCharity.objects.filter(end_date__gte=date.today(), amount__gt=0, name__icontains=q_charity)
 
+    return render(request, 'users/charity_search_results.html', {'charity_results': charity_results})
+
+def search_campaign(request):
+    q_campaign = request.GET.get('q_campaign', '')
+    campaign_results = addCampaign.objects.filter(end_date__gte=date.today(), amount__gt=0, name__icontains=q_campaign)
+
+    return render(request, 'users/campaign_search_results.html', {'campaign_results': campaign_results})
 
 #============================ADD AMOUNT TO WALLET==================================
 @login_required

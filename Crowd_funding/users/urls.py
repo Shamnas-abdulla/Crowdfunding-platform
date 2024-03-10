@@ -38,6 +38,9 @@ urlpatterns = [
     path('create_wallet/',views.create_wallet,name="create_wallet"),
     path('Add_amt/',views.Add_amount,name="Add_amt"),
 
+    path('search_charity/', views.search_charity, name='search_charity'),
+    path('search_campaign/', views.search_campaign, name='search_campaign'),
+
     #======================Auto deduct Section=========================
     path('set_charity/<int:charity_id>',views.set_Charity,name="set_charity"),
     path('set_campaign/<int:campaign_id>',views.set_Campaign,name="set_campaign"),

@@ -1,186 +1,239 @@
 {% extends 'users/layout/base.html' %}
 {% load static %}
 {% block body %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-<div class="container bg-light" style="margin-top: 20px;background-color:#F0F9FF;color:black;padding-bottom: 20px;">
+<div class="container bg-light" style="margin-top: 20px; background-color: #F0F9FF; color: black; padding-bottom: 20px;">
   <br>
-  <h1 style="color: rgb(14, 41, 90);font-family: Georgia, serif;"><center>Welcome {{user_name}}</center></h1><br>
-    <div class="card">
-      <div class="card-body">
-        <p class="card-text" style="color: rgb(14, 41, 90);font-size: 25px;padding-left: 200px;font-family: serif;">"Its not how much we give but how much love we put into giving" <br></p>
-        <p class="card-text" style="color: rgb(14, 41, 90);font-size: 25px;padding-left: 780px;font-family: serif;">-Mother Teresa</p><br>
-        <h2 class="card-title" style="color: rgb(14, 41, 90);padding-left: 80px;">Available Balance:₹{{amount}}</h2>
-       
-      </div>
+  <h1 style="color: #0E295A; font-family: Georgia, serif; text-align: center;">Welcome {{ user }}</h1>
+  <div class="card">
+    <div class="card-body">
+      <p class="card-text" style="color: #0E295A; font-size: 25px; text-align: center; font-family: serif;">
+        "It's not how much we give but how much love we put into giving" <br>
+        - Mother Teresa
+      </p>
+      <p class="card-text" style="color: #0E295A; font-size: 25px; text-align: center; font-family: serif;">
+        Available Balance: ₹{{ amount }}
+      </p>
     </div>
-    <form class="form-inline" method="post" action="{% url 'Add_amt' %}">
-     {% csrf_token %}
-     <div class="form-group mx-sm-3 mb-2">
-        <label for="" class="sr-only">Add amount</label>
-        <input type="number" class="form-control" id="" name="amount" placeholder="Add amount" style="margin-left: 75px;margin-top: 8px;">
-     </div>
-     <button type="submit" class="btn btn-primary mb-2" style="margin-top: 8px;">Confirm</button>
-     {% if zero_error %}
-        <h5 style="color:red;font-size: 30px;" >{{zero_error}}</h5>
-     {% endif %}
-    </form>
- </div>
- <div class="container">
-    <h3 style="font-size: 40px;color:#154360;font-family: Georgia, serif;"><center>Set monthly deduct donation</center> </h3>
-    <br><br>
-    <h3 style="font-size: 40px;color:#154360;">Selected items for auto deduct</h3>            
-    <div class="row">
-      <div class="col-lg-5 grid-margin stretch-card" style="width: 565px;margin:auto 10px;background-color: #508fdc;color: black;font-size: 20px;border-radius: 10px;">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">Charity </h4>
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th> Name </th>
-                    <th> Category </th>
-                    <th> amount </th>
-                    <th> End date </th>
-                    <th> Remove </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for set_amount in set_amount_charity %}
-                  <tr>
-                    <td>{{set_amount.charity_name.name}} </td>
-                    <td>{{set_amount.charity_name.category}} </td>
-                    <td> {{set_amount.amount}}</td>
-                    <td> {{set_amount.end_date}}</td>
-                    <td> <a href="{% url "delete_set_charity" set_amount.charity_name_id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
+  </div>
+
+  <form class="form-inline" method="post" action="{% url 'Add_amt' %}">
+    {% csrf_token %}
+    <div class="form-group mx-sm-3 mb-2">
+      <label for="" class="sr-only">Add amount</label>
+      <input type="number" class="form-control" id="" name="amount" placeholder="Add amount" style="margin-left: 75px; margin-top: 8px;">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2" style="margin-top: 8px;">Confirm</button>
+    {% if zero_error %}
+      <h5 style="color: red; font-size: 20px;">{{ zero_error }}</h5>
+    {% endif %}
+  </form>
+</div>
+
+<div class="container">
+  <h3 style="font-size: 40px; color: #154360; font-family: Georgia, serif; text-align: center;">Set Monthly Deduct Donation</h3>
+  <br><br>
+  <h3 style="font-size: 40px; color: #154360; text-align: center;">Selected Items for Auto Deduct</h3>
+  <div class="row">
+    <div class="col-lg-5 grid-margin stretch-card" style="width: 565px; margin:auto 10px; background-color: #508fdc; color: black; font-size: 20px; border-radius: 10px;">
+
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Charity</h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>End Date</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for set_amount in set_amount_charity %}
+                <tr>
+                  <td>{{ set_amount.charity_name.name }}</td>
+                  <td>{{ set_amount.charity_name.category }}</td>
+                  <td>{{ set_amount.amount }}</td>
+                  <td>{{ set_amount.end_date }}</td>
+                  <td><a href="{% url 'delete_set_charity' set_amount.charity_name_id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-                       
-      <div class="col-lg-5 grid-margin stretch-card" style="width: 565px;margin:auto 10px;background-color: #508fdc;color: black;font-size: 20px;border-radius: 10px;">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">Campaign</h4>
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th> Name </th>
-                    <th> Category </th>
-                    <th> amount </th>
-                    <th> End date </th>
-                    <th> Remove </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for set_amount in set_amount_campaign %}
-                  <tr>
-                    <td>{{set_amount.campaign_name.name}} </td>
-                    <td>{{set_amount.charity_name.category}} </td>
-                    <td> {{set_amount.amount}}</td>
-                    <td> {{set_amount.end_date}}</td>
-                    <td> <a href="{% url "delete_set_campaign" set_amount.campaign_name_id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-         </div>
-       </div>
     </div>
-  <h3 style="font-size: 40px;color:#154360;">Select items or change amount</h3>
-    <div class="row">
-      <div class="col-lg-5 grid-margin stretch-card" style="width: 565px;margin:auto 10px;background-color: #508fdc;color: black;font-size: 20px;border-radius: 10px;">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">Charity </h4>
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>Charity name</th>
-                    <th>Founder name</th>
-                    <th>Total amount</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-                <tbody>
+
+    <div class="col-lg-5 grid-margin stretch-card" style="width: 565px; margin:auto 10px; background-color: #508fdc; color: black; font-size: 20px; border-radius: 10px;">
+
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Campaign</h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>End Date</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for set_amount in set_amount_campaign %}
+                <tr>
+                  <td>{{ set_amount.campaign_name.name }}</td>
+                  <td>{{ set_amount.charity_name.category }}</td>
+                  <td>{{ set_amount.amount }}</td>
+                  <td>{{ set_amount.end_date }}</td>
+                  <td><a href="{% url 'delete_set_campaign' set_amount.campaign_name_id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size: 40px; color: #154360; text-align: center;">Select Items or Change Amount</h3>
+  <div class="row">
+    <div class="col-lg-5 grid-margin stretch-card" style="width: 565px; margin:auto 10px; background-color: #508fdc; color: black; font-size: 20px; border-radius: 10px;">
+
+      <form id="charitySearchForm" class="form-inline">
+        <input type="text" class="form-control mb-2 mr-sm-2" id="charity_search" name="q_charity" placeholder="Enter your search">
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+      </form>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Charity</h4>
+          <div class="table-responsive" id="charityTable">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Charity name</th>
+                  <th>Founder name</th>
+                  <th>Total amount</th>
+                  <th>Select</th>
+                </tr>
+              </thead>
+              <tbody id="charityTableBody">
                 {% for charity in charities %}
                 <tr>
-                  <td>{{charity.name}}</td>
-                  <td>{{charity.founder_name}}</td>
-                  <td> {{charity.amount}} <i class="mdi mdi-arrow-down"></i></td>
+                  <td>{{ charity.name }}</td>
+                  <td>{{ charity.founder_name }}</td>
+                  <td>{{ charity.amount }} <i class="mdi mdi-arrow-down"></i></td>
                   <td>
-                    <form action="{% url "set_charity" charity.id %}" method="post">
+                    <form action="{% url 'set_charity' charity.id %}" method="post">
                       {% csrf_token %}
                       {% if charity.id in set_charity_list %}
-                      <input style="width: 90px;" type="number" name="set_amount" value=""  id=""><button class="btn btn-success" type="submit" style="width: 90px;">Edit</button></td>            
+                      <input style="width: 90px;" type="number" name="set_amount" value="" id="">
+                      <button class="btn btn-success" type="submit" style="width: 90px;">Edit</button>
                       {% else %}
-                      <input style="width: 90px;" type="number" name="set_amount"   id=""><button class="btn btn-info" type="submit" style="width: 90px;">Add</button></td>
+                      <input style="width: 90px;" type="number" name="set_amount" id="">
+                      <button class="btn btn-info" type="submit" style="width: 90px;">Add</button>
                       {% endif %}
-                    </form>   
-                  </tr>
+                    </form>
+                  </td>
+                </tr>
                 {% endfor %}
-                </tbody>
-                {% if zero_error_charity %}
-                  <h5 style="color:red;font-size: 20px;" >{{zero_error_charity}}</h5>
-                {% endif %}
-             </table>
-           </div>
-         </div>
-       </div>
-     </div>
-     <div class="col-lg-5 grid-margin stretch-card" style="width: 565px;margin: auto 10px;;background-color: #508fdc;color: black;font-size: 20px;border-radius: 10px;">
-       <div class="card">
-         <div class="card-body">
-           <h4 class="card-title">Campaign</h4>
-           <div class="table-responsive">
-             <table class="table table-hover">
-               <thead>
-                 <tr>
-                   <th>Campaign name</th>
-                   <th>Founder name</th>
-                   <th>Total amount</th>
-                   <th>Selects</th>
-                 </tr>
-               </thead>
-               <tbody>
-                  {% for campaign in campaigns %}
-                  <tr>
-                    <td>{{campaign.name}}</td>
-                    <td>{{campaign.founder_name}}</td>
-                    <td> {{campaign.amount}} <i class="mdi mdi-arrow-down"></i></td>
-                    <td>
-                      <form action="{% url "set_campaign" campaign.id %}" method="post">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5 grid-margin stretch-card" style="width: 565px; margin: auto 10px; background-color: #508fdc; color: black; font-size: 20px; border-radius: 10px;">
+
+      <form id="campaignSearchForm" class="form-inline">
+        <input type="text" class="form-control mb-2 mr-sm-2" id="campaign_search" name="q_campaign" placeholder="Enter your search">
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+      </form>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Campaign</h4>
+          <div class="table-responsive" id="campaignTable">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Campaign name</th>
+                  <th>Founder name</th>
+                  <th>Total amount</th>
+                  <th>Select</th>
+                </tr>
+              </thead>
+              <tbody id="campaignTableBody">
+                {% for campaign in campaigns %}
+                <tr>
+                  <td>{{ campaign.name }}</td>
+                  <td>{{ campaign.founder_name }}</td>
+                  <td>{{ campaign.amount }} <i class="mdi mdi-arrow-down"></i></td>
+                  <td>
+                    <form action="{% url 'set_campaign' campaign.id %}" method="post">
                       {% csrf_token %}
                       {% if campaign.id in set_campaign_list %}
-                      <p>{{error_msg}}</p>
-                      <input style="width: 90px;background-color:#F4F9FC;" type="number" name="set_amount"   id=""><button class="btn btn-success" type="submit" style="width: 90px;">Edit</button></td>
+                      <input style="width: 90px;" type="number" name="set_amount" value="" id="">
+                      <button class="btn btn-success" type="submit" style="width: 90px;">Edit</button>
                       {% else %}
-                      <input style="width: 90px;background-color:#F4F9FC;" type="number" name="set_amount"   id=""><button class="btn btn-info" type="submit" style="width: 90px;">Add</button></td>
-                      {% endif %}  
+                      <input style="width: 90px;" type="number" name="set_amount" id="">
+                      <button class="btn btn-info" type="submit" style="width: 90px;">Add</button>
+                      {% endif %}
                     </form>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              {% if zero_error_campaign %}
-              <h5 style="color:red;font-size: 20px;" >{{zero_error_campaign}}</h5>
-              {% endif %}
-              </table>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
-  <br><br><br><br>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-</div>
-{% endblock  %}
+<br><br><br><br>
+
+<script>
+  $(document).ready(function () {
+    $("#charitySearchForm").submit(function (event) {
+      event.preventDefault(); // Prevent the form from submitting normally
+
+      // Perform AJAX request to fetch search results
+      $.ajax({
+        type: "GET",
+        url: "{% url 'search_charity' %}",
+        data: $("#charitySearchForm").serialize(), // Serialize form data
+        success: function (data) {
+          // Update the table body with fetched data
+          $("#charityTableBody").html(data);
+        },
+      });
+    });
+  });
+  $(document).ready(function () {
+    $("#campaignSearchForm").submit(function (event) {
+      event.preventDefault(); // Prevent the form from submitting normally
+
+      // Perform AJAX request to fetch search results
+      $.ajax({
+        type: "GET",
+        url: "{% url 'search_campaign' %}",
+        data: $("#campaignSearchForm").serialize(), // Serialize form data
+        success: function (data) {
+          // Update the table body with fetched data
+          $("#campaignTableBody").html(data);
+        },
+      });
+    });
+  });
+</script>
+
+{% endblock %}

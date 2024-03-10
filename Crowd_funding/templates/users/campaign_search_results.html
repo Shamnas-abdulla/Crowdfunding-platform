@@ -1,0 +1,19 @@
+{% for campaign in campaign_results %}
+  <tr>
+    <td>{{ campaign.name }}</td>
+    <td>{{ campaign.founder_name }}</td>
+    <td>{{ campaign.amount }} <i class="mdi mdi-arrow-down"></i></td>
+    <td>
+      <form action="{% url 'set_campaign' campaign.id %}" method="post">
+        {% csrf_token %}
+        {% if campaign.id in set_campaign_list %}
+          <input style="width: 90px;" type="number" name="set_amount" value="" id="">
+          <button class="btn btn-success" type="submit" style="width: 90px;">Edit</button>
+        {% else %}
+          <input style="width: 90px;" type="number" name="set_amount" id="">
+          <button class="btn btn-info" type="submit" style="width: 90px;">Add</button>
+        {% endif %}
+      </form>
+    </td>
+  </tr>
+{% endfor %}
