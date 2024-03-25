@@ -55,30 +55,9 @@ def Logout(request):
         logout(request)
         return render(request,'adminpanel/login.html')
 
-#-------------------Change password----------------
+
 
          
-
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.hashers import check_password
-def change_pass(request):
-    id = request.session.get('id')  # Use get to avoid KeyError if 'id' is not in the session
-
-    if request.method == 'POST':
-        new_password = request.POST.get('new_password')
-        existing_pass = admin_Login.objects.filter(id=id).values_list('password', flat=True).first()
-        if check_password(new_password , existing_pass):
-            messages.error(request,'This is the old password')
-            return redirect('change_pass')
-        hashed_password = make_password(new_password)
-    
-        # Update the password using the hashed value
-        admin_Login.objects.filter(id=id).update(password=hashed_password)
-        messages.success(request, 'Password changed successfully.')
-
-        return redirect('change_pass')
-    else:
-         return render(request, 'adminpanel/password.html')
 
         
 #-----------------------Add new admin-------------------------
@@ -97,11 +76,8 @@ def addAdmin(request):
             # If username and email are unique, create a new admin
             admin_Login.objects.create(user_name=username, email=email, password=password)
             messages.success(request, 'New admin added successfully.')
-    else:
-        return render(request, 'adminpanel/AddAdmin.html')
-
+            return redirect('AddAdmin')  # Redirect to the same page after successful form submission
     return render(request, 'adminpanel/AddAdmin.html')
-
 #----------------------index page-------------------------------------
 
 
@@ -234,9 +210,6 @@ def charity_save(request):
         email=request.POST.get('email')
         phone=request.POST.get('phone')
       
-        if addCharity.objects.filter(name=char_name).exists():
-             context = {'form': form,'error': 'Charity name already exist'}
-             return render(request, 'adminpanel/charities.html',context)
         if addCharity.objects.filter(email=email).exists():
              context = {'form': form,'error': 'Email already exist'}
              return render(request, 'adminpanel/charities.html',context)
@@ -348,9 +321,6 @@ def campaign_save(request):
         email=request.POST.get('email')
         phone=request.POST.get('phone')
       
-        if addCampaign.objects.filter(name=comp_name).exists():#edted by Ranya
-             context = {'form': form,'error': 'Campaign name already exist'}
-             return render(request, 'adminpanel/campaign.html',context)
         if addCampaign.objects.filter(email=email).exists():#do this for mobile
              context = {'form': form,'error': 'Email already exist'}
              return render(request, 'adminpanel/campaign.html',context)
@@ -365,7 +335,7 @@ def campaign_save(request):
                 donation_link = f"http://127.0.0.1:8000/donate_campaign/{campaign_id}/"
                 msg = "Campaign is saved"
 
-                return render(request, 'adminpanel/charities.html', {'donation_link': donation_link,'form':form,'msg':msg})
+                return render(request, 'adminpanel/campaign.html', {'donation_link': donation_link,'form':form,'msg':msg})
         else:
             errors = form.errors
             context = {'form': form,'error': errors}
@@ -392,7 +362,7 @@ def view_campaign(request):
 
 
 def delete_campaign(request,pk):
-    charity = addCharity.objects.get(pk=pk)
+    charity = addCampaign.objects.get(pk=pk)
     charity.delete()
     return redirect('view_campaign')
 

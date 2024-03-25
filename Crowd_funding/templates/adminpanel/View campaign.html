@@ -44,7 +44,7 @@
                       <td>{{ data.category }}</td>
                       <td> {{ data.amount }}</td>
                       <td>{{ data.end_date }}</td>
-                      <td> <a href="{% url 'delete_charity' data.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                      <td> <a href="{% url 'delete_campaign' data.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -79,7 +79,7 @@
                       <td>{{ data.category }}</td>
                       <td> {{ data.amount }}</td>
                       <td>{{ data.end_date }}</td>
-                      <td> <a href="{% url 'delete_charity' data.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                      <td> <a href="{% url 'delete_campaign' data.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
                     </tr>
                     {% endif %}
                     {% endfor %}

@@ -82,8 +82,8 @@ def autoDeduct():
           if flag:
               subject = "From Crowd funding"
               message = f'''Hi,{wallet.user.name}
-            Your monthly deduction is not completed
-            because of a lack of amount in your wallet.
+Your monthly deduction is not completed
+because of a lack of amount in your wallet.
               '''
               email_from = settings.EMAIL_HOST_USER
               recipient_list = [wallet.user.email, ]
@@ -92,10 +92,10 @@ def autoDeduct():
           else:
               subject = "From Crowd funding"
               message = f'''Hi,{wallet.user.name}
-              Your monthly deduction has been successfully completed.
-       Thank you for your donation. Please note that, in some cases,
-       deductions may not be completed for specific charities or campaigns due to the
-       total amount allocated for those charities or campaigns being exceeded
+Your monthly deduction has been successfully completed.
+Thank you for your donation. Please note that, in some cases,
+deductions may not be completed for specific charities or campaigns due to the
+total amount allocated for those charities or campaigns being exceeded
               '''
               email_from = settings.EMAIL_HOST_USER
               recipient_list = [wallet.user.email, ]
@@ -159,10 +159,10 @@ def generate_email():
                 if user_wallet.amount < total_money.total_amt:
                     subject = "From Crowd funding"
                     message = f'''Hi {user_id.name},.
-                    Kindly be informed that your wallet lacks sufficient funds for
-                    tomorrow's scheduled auto monthly deduction
-                    We encourage you to top up your wallet with the necessary amount.
-                    The amount you need to pay monthly deduction is : {total_money.total_amt} .
+Kindly be informed that your wallet lacks sufficient funds for
+tomorrow's scheduled auto monthly deduction
+We encourage you to top up your wallet with the necessary amount.
+The amount you need to pay monthly deduction is : {total_money.total_amt} .
                     '''
                     email_from = settings.EMAIL_HOST_USER
                     recipient_list = [user_id.email, ]
@@ -181,12 +181,12 @@ def generate_email():
 
 # call these two function in 28'th day of every month
 # To inform there is no enough amount in their wallet to auto deduction  
-if datetime.today().day == 28:
+if datetime.today().day == 2:
      total_money_deduct()
      generate_email()
 
 # Call these functions in 1'st day of every month for auto deduction
-if datetime.today().day == 28:
+if datetime.today().day == 2:
      total_money_deduct()
      autoDeduct()
      
@@ -199,7 +199,7 @@ def dltSet():
         if charity.amount <= 0 or charity.end_date < date.today():
             charity.delete()
     for campaign in campaigns:
-         if campaign.amount <= 0 or charity.end_date < date.today():
+         if campaign.amount <= 0 or campaign.end_date < date.today():
               campaign.delete()
 
 dltSet()  
@@ -281,7 +281,7 @@ def user_signup(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Successfully signed up.')
-            return redirect('signin')
+            return redirect('create_wallet')
         else:
             pass
     else:
@@ -298,7 +298,12 @@ def user_signup(request):
 def logout_view(request):
     if request.user.is_authenticated:
          logout(request)
+         storage = messages.get_messages(request)
+         for message in storage:
+            # Discard each message
+            pass
          return redirect('signin')
+    
     # Redirect to a specific page after logout, or you can customize this as needed.
     return redirect('signin') 
 

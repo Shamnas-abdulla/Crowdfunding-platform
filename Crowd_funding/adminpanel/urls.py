@@ -17,7 +17,6 @@ urlpatterns = [
 
     #---------------Change password-------------------
 
-    path('change_pass',views.change_pass,name='change_pass'),
 
     #================Forgot password section======================
     path('ForgotPassword/', views.ForgotPassword, name='ForgotPassword'),

@@ -12,6 +12,11 @@ class UserSignupForm(UserCreationForm):
     class Meta:
         model = user_signup
         fields = ['username', 'name', 'email', 'phone']
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if len(phone) < 10:
+            raise forms.ValidationError("Phone number must be at least 10 digits long.")
+        return phone
 
 
 class YourLoginForm(AuthenticationForm):

@@ -89,7 +89,7 @@
                 {% for set_amount in set_amount_campaign %}
                 <tr>
                   <td>{{ set_amount.campaign_name.name }}</td>
-                  <td>{{ set_amount.charity_name.category }}</td>
+                  <td>{{ set_amount.campaign_name.category }}</td>
                   <td>{{ set_amount.amount }}</td>
                   <td>{{ set_amount.end_date }}</td>
                   <td><a href="{% url 'delete_set_campaign' set_amount.campaign_name_id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
@@ -119,19 +119,23 @@
               <thead>
                 <tr>
                   <th>Charity name</th>
-                  <th>Founder name</th>
+                  <th>Category</th>
                   <th>Total amount</th>
                   <th>Select</th>
                 </tr>
               </thead>
               <tbody id="charityTableBody">
+                {% if zero_error_charity %}
+                        <h5 style="color: red; font-size: 20px;">{{ zero_error_charity }}</h5>
+                {% endif %}
                 {% for charity in charities %}
                 <tr>
                   <td>{{ charity.name }}</td>
-                  <td>{{ charity.founder_name }}</td>
+                  <td>{{ charity.category }}</td>
                   <td>{{ charity.amount }} <i class="mdi mdi-arrow-down"></i></td>
                   <td>
                     <form action="{% url 'set_charity' charity.id %}" method="post">
+                      
                       {% csrf_token %}
                       {% if charity.id in set_charity_list %}
                       <input style="width: 90px;" type="number" name="set_amount" value="" id="">
@@ -165,16 +169,19 @@
               <thead>
                 <tr>
                   <th>Campaign name</th>
-                  <th>Founder name</th>
+                  <th>Category</th>
                   <th>Total amount</th>
                   <th>Select</th>
                 </tr>
               </thead>
               <tbody id="campaignTableBody">
+                {% if zero_error_campaign %}
+                        <h5 style="color: red; font-size: 20px;">{{ zero_error_campaign }}</h5>
+                {% endif %}
                 {% for campaign in campaigns %}
                 <tr>
                   <td>{{ campaign.name }}</td>
-                  <td>{{ campaign.founder_name }}</td>
+                  <td>{{ campaign.category }}</td>
                   <td>{{ campaign.amount }} <i class="mdi mdi-arrow-down"></i></td>
                   <td>
                     <form action="{% url 'set_campaign' campaign.id %}" method="post">

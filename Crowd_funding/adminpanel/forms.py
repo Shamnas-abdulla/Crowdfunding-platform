@@ -1,5 +1,6 @@
 from django import forms
 from .models import Campaign_Category, Charity_Category, addCampaign,addCharity
+from django.core.exceptions import ValidationError
 
 
 
@@ -17,19 +18,17 @@ class CharityCategoryForm(forms.ModelForm):
 class AddCharity(forms.ModelForm):
     class Meta:
         model = addCharity
-        fields = ['name','founder_name','email','phone','category','amount','end_date','description' ,'image',
-                  ]
+        fields = ['name', 'founder_name', 'email', 'phone', 'category', 'amount', 'end_date', 'description', 'image']
         widgets = {
-            'name': forms.TextInput(attrs={'class':'form-control','placeholder':'Charity name'}),
-            'founder_name': forms.TextInput(attrs={'class':'form-control','placeholder':'Founder name'}),
-            'email':forms.EmailInput(attrs={'class':'form-control','placeholder':'email'}),
-            'phone':forms.TextInput(attrs={'class':'form-control','placeholder':'phone number'}),
-            'category': forms.Select(attrs={'class':'form-control'}),
-            'amount': forms.NumberInput(attrs={'class':'form-control','placeholder':'Total amount'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Charity name'}),
+            'founder_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Founder name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone number'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total amount'}),
             'end_date': forms.DateInput(attrs={'type': 'date', 'placeholder': 'End date', 'class': 'form-control'}),
             'image': forms.FileInput(attrs={'accept': '.jpg, .png, .gif,.jpeg'}),
-            'description': forms.Textarea(attrs={'class':'md-textarea form-control','placeholder':'Description'}),
-            
+            'description': forms.Textarea(attrs={'class': 'md-textarea form-control', 'placeholder': 'Description'}),
         }
         labels = {
             'name': 'Charity Name',
@@ -42,6 +41,12 @@ class AddCharity(forms.ModelForm):
             'image': 'Image',
             'description': 'Description',
         }
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if len(phone) < 10:
+            raise ValidationError("Phone number must be at least 10 digits long.")
+        return phone
 
 
 
@@ -86,6 +91,11 @@ class AddCampaign(forms.ModelForm):
             'image': 'Image',
             'description': 'Description',
         }
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if len(phone) < 10:
+            raise ValidationError("Phone number must be at least 10 digits long.")
+        return phone
 
 
     
